@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Add Dogs </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>Add Dogs</h1>
+    </div>
+    <a href="{{url_for('index')}}" class="button1" role="button">Back To Map</a>
+    <form action="/add" method="post" autocomplete="off">
+      <input type="text" name="gpsid" placeholder="GPS ID"/>
+      <input type="text" name="dog" placeholder="Dog Name"/>
+
+      <button class="btn btn-primary" type="submit">Add Dog</button>
+    </form>
+    <table>
+      <tr>
+        <th> Dog Name </th>
+        <th> GPS ID </th>
+      </tr>
+      <tr>
+      {% for doog in dogs %}
+
+        <td> {{doog['dog']}}</td>
+        <td> {{doog['gps_id']}}</td>
+
+     {% endfor %}
+     </tr>
+     </table>
+  </body>
+</html>
