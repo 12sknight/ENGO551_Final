@@ -36,14 +36,13 @@ def login():
         #get username and password from form
         uname=request.form.get("username")
         passw=request.form.get("password")
-        temp=db.execute("SELECT * FROM table1 WHERE username = :username AND pass = :pass",{"username":uname, "pass":passw})
-        temp2=temp.fetchall()
         #start a session for the user
         session["username"]=uname
 
         #see if password and username are correct
         if db.execute("SELECT * FROM table1 WHERE username = :username AND pass = :pass",{"username":uname, "pass":passw}).rowcount >1:
             return render_template("error.html", message="Username or Password is not correct")
+        #If they are correct go to /add route
         else:
             return redirect("/add")
     else:
@@ -68,7 +67,7 @@ def signup():
         db.execute("INSERT INTO table1 (username, pass) VALUES (:uname, :passw)",
                 {"uname": uname,"passw": passw})
         db.commit()
-
+        #Redirect to /login
         return redirect("/login")
     #if user method is GET
     else:
@@ -76,32 +75,37 @@ def signup():
 
 @app.route("/add",methods=["GET","POST"])
 def add():
+    #If user wants to add a dog
     if request.method=="POST":
         username=session["username"]
-        print(username)
+
         GPS_ID=request.form.get("gpsid")
         dog=request.form.get("dog")
 
         #See if GPS ID exist already
         if db.execute("SELECT * FROM table2 WHERE GPS_ID = :GPS_ID",{"GPS_ID":GPS_ID}).rowcount>0:
             return render_template("error.html",message="GPS ID Already Exist")
-
+        #add to dog table
         else:
             db.execute("INSERT INTO table2 (GPS_ID,dog,username) VALUES (:GPS_ID,:dog,:username)",
                 {"GPS_ID":GPS_ID,"dog":dog,"username":username})
             db.commit()
+
+        #Redirect to the same route to update dog list
         return redirect("/add")
 
     else:
+        #Get all the dog info corresponding to the session username
         username=session["username"]
         temp=db.execute("SELECT GPS_ID, dog FROM table2 WHERE username=:username",{"username":username})
 
         dogs=temp.fetchall()
 
-            #return render_template("doglist.html", dogs=dogs)
+            #display dog info as a table
         return render_template("add.html", dogs=dogs)
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect("/")
+
