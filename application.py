@@ -26,7 +26,8 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     #Main page = map page
-    return render_template("index.html")
+    water = db.execute("SELECT * FROM water").fetchall()
+    return render_template("index.html", water=water)
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -108,4 +109,3 @@ def add():
 def logout():
     session.clear()
     return redirect("/")
-
