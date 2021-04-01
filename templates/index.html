@@ -72,6 +72,12 @@
        zoom: 11
      });
 
+     var waterIcon = new L.Icon({
+       iconUrl: 'https://github.com/12sknight/ENGO551_Final/blob/main/icons/fountain.png?raw=true',
+       iconSize: [25, 25],
+       iconAnchor: [12, 6],
+     });
+
      //Add tilelayer to map
      //L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png?api_key=30b6c838-4624-47eb-964a-87fcc2e3eb39', {maxZoom: 20, attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}).addTo(map);
 
@@ -82,7 +88,7 @@
 
      //Add water data to layer
      {% for w in water %}
-     var marker = L.marker([{{ w['latitude'] }}, {{ w['longitude'] }}]).bindPopup('Doggie Fountain');
+     var marker = L.marker([{{ w['latitude'] }}, {{ w['longitude'] }}], {icon: waterIcon}).bindPopup('Doggie Fountain');
      marker.addTo(watersource);
      {% endfor %}
      watersource.addTo(map);
