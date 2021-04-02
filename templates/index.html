@@ -100,6 +100,7 @@ var geojsonFeature = [{
 }];
 
 var ftemp = new L.GeoJSON(geojsonFeature).addTo(map);
+ftemp.addTo(dogparks);
 
 {% endfor %}
 
@@ -210,6 +211,7 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
 
      //Add overlay control
      var overlayMaps = {
+     "Dog Parks": dogparks,
      "Water Fountains": watersource
      };
 
