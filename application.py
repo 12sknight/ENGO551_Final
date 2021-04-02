@@ -25,7 +25,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    #Main page = map page
+    #Main page = map page without login
     water = db.execute("SELECT * FROM water").fetchall()
     parks = db.execute("SELECT * FROM parks").fetchall()
     return render_template("index.html", water=water, parks=parks)

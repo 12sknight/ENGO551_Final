@@ -85,6 +85,8 @@
      var watersource = L.layerGroup();
      var dogparks = L.layerGroup();
      var mql;
+     var pArray = [];
+     var tArray = [];
 
 //Add parks data to layer
 {% for p in parks %}
@@ -97,10 +99,16 @@ var geojsonFeature = [{
    }
 }];
 
-new L.GeoJSON(geojsonFeature).addTo(map);
+var ftemp = new L.GeoJSON(geojsonFeature).addTo(map);
+
 {% endfor %}
 
-
+//create turf array
+var parkpoints = turf.featureCollection([
+{% for p in parks %}
+turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
+{% endfor %}
+]);
 
      //Add water data to layer
      {% for w in water %}
@@ -122,11 +130,41 @@ new L.GeoJSON(geojsonFeature).addTo(map);
        //disable button
        $("#park").attr("disabled", true);
        //remove route to water source if on map
+       if (mql != undefined) {
        map.removeLayer(mql);
+       mql.clearLayers();
+       };
        //re-enable water button
        $('#water').removeAttr('disabled');
 
+       //get geolocation
+       if (navigator.geolocation) {
+           navigator.geolocation.getCurrentPosition(showParkRoute);
+       } else {
+           console.log("denied");
+       }
+
+       function showParkRoute(position) {
+         var targetPoint = turf.point([position.coords.latitude, position.coords.longitude]);
+         var nearestpark = turf.nearest(targetPoint, parkpoints);
+
+
+         //show route
+         var dir = MQ.routing.directions();
+         dir.route({
+             locations: [
+                 { latLng: { lat: position.coords.latitude, lng: position.coords.longitude } },
+                 { latLng: { lat: nearestpark.geometry.coordinates[0], lng: nearestpark.geometry.coordinates[1] } },
+             ]
+         });
+
+         mql = MQ.routing.routeLayer({
+            directions: dir,
+         }).addTo(map);
+      }
      }
+
+
 
      // finds and displays route to closest water source
      function closestwater() {
@@ -134,31 +172,38 @@ new L.GeoJSON(geojsonFeature).addTo(map);
        $("#water").attr("disabled", true);
        //re-enable park button
        $('#park').removeAttr('disabled');
+       //remove route to park if on map
+       if (mql != undefined) {
+       map.removeLayer(mql);
+       mql.clearLayers();
+       };
        //get geolocation
        if (navigator.geolocation) {
-           navigator.geolocation.getCurrentPosition(showRoute);
+           navigator.geolocation.getCurrentPosition(showWaterRoute);
        } else {
            console.log("denied");
        }
+
+       function showWaterRoute(position) {
+         var targetPoint = turf.point([position.coords.latitude, position.coords.longitude]);
+         var nearestwater = turf.nearest(targetPoint, waterpoints);
+
+         //show route
+         var dir = MQ.routing.directions();
+         dir.route({
+             locations: [
+                 { latLng: { lat: position.coords.latitude, lng: position.coords.longitude } },
+                 { latLng: { lat: nearestwater.geometry.coordinates[0], lng: nearestwater.geometry.coordinates[1] } },
+             ]
+         });
+
+         mql = MQ.routing.routeLayer({
+            directions: dir,
+         }).addTo(map);
+      }
      }
 
-     function showRoute(position) {
-       var targetPoint = turf.point([position.coords.latitude, position.coords.longitude]);
-       var nearestwater = turf.nearest(targetPoint, waterpoints);
 
-       //show route
-       var dir = MQ.routing.directions();
-       dir.route({
-           locations: [
-               { latLng: { lat: position.coords.latitude, lng: position.coords.longitude } },
-               { latLng: { lat: nearestwater.geometry.coordinates[0], lng: nearestwater.geometry.coordinates[1] } },
-           ]
-       });
-
-       mql = MQ.routing.routeLayer({
-          directions: dir,
-       }).addTo(map);
-    }
 
 
 
