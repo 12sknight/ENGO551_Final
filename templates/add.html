@@ -4,32 +4,51 @@
     <title> Add Dogs </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+    table, th, td {
+      border: 1px solid black;
+    }
+
+    .header {
+      padding: 10px;
+      text-align: left;
+      background: white;
+      color: black;
+      font-size: 25px;
+    }
+
+
+    </style>
   </head>
 
   <body>
     <div class="header">
-      <h1>Add Dogs</h1>
+      <a href="{{url_for('usermap')}}" class="btn btn-primary" role="button">Go to Map</a>
     </div>
-    <a href="{{url_for('index')}}" class="button1" role="button">Back To Map</a>
+
+      <h1>Add Dogs</h1>
     <form action="/add" method="post" autocomplete="off">
       <input type="text" name="gpsid" placeholder="GPS ID"/>
       <input type="text" name="dog" placeholder="Dog Name"/>
 
       <button class="btn btn-primary" type="submit">Add Dog</button>
     </form>
-    <table>
-      <tr>
-        <th> Dog Name </th>
-        <th> GPS ID </th>
-      </tr>
-      <tr>
-      {% for doog in dogs %}
-
-        <td> {{doog['dog']}}</td>
-        <td> {{doog['gps_id']}}</td>
-
-     {% endfor %}
-     </tr>
+Registered Dogs:
+     <table>
+       <tr>
+         <th>Dog Name</th>
+         <th>GPS ID</th>
+       </tr>
+       {% for d in dogs %}
+       <tr>
+         <td>{{d['dog']}}</td>
+         <td>{{d['gps_id']}}</td>
+       </tr>
+       {% endfor %}
      </table>
+
+
+
   </body>
 </html>

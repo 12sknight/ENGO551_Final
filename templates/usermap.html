@@ -46,10 +46,11 @@
 
     <!-- Add in header section with bootstrap navigation buttons -->
     <div class="header">
-         <a href="{{url_for('login')}}" class="btn btn-primary" role="button">Login</a>
-         <a href="{{url_for('signup')}}" class="btn btn-primary" role="button">Sign Up</a>
+         <a href="{{url_for('logout')}}" class="btn btn-primary" role="button" >Logout</a>
          <button type="button" class="btn btn-primary" onclick="closestpark()" id="park" data-toggle="tooltip" title="Find the closest dog park">Closest Park</button>
          <button type="button" class="btn btn-primary" onclick="closestwater()" id="water" data-toggle="tooltip" title="Find the closest water fountain">Closest Water Fountain</button>
+         <a href="{{url_for('history')}}" class="btn btn-primary" role="button" >Dog History</a>
+         Hello {{username}}!
      </div>
 
      <div id="map"></div>

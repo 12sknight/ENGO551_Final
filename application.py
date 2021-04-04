@@ -25,7 +25,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    #Main page = map page without login
+    #Main page = map page without user being logged in
     water = db.execute("SELECT * FROM water").fetchall()
     parks = db.execute("SELECT * FROM parks").fetchall()
     return render_template("index.html", water=water, parks=parks)
@@ -74,6 +74,35 @@ def signup():
     #if user method is GET
     else:
         return render_template("signup.html")
+
+@app.route("/usermap",methods=["GET","POST"])
+def usermap():
+    #***ZOE add last gps location from dog(s) for user logged in***
+
+    water = db.execute("SELECT * FROM water").fetchall()
+    parks = db.execute("SELECT * FROM parks").fetchall()
+    username=session["username"]
+    return render_template("usermap.html", water=water, parks=parks, username=username)
+
+@app.route("/history",methods=["GET","POST"])
+def history():
+    if request.method=="POST":
+        username=session["username"]
+        startdate = request.form.get("datepicker")
+        enddate = request.form.get("datepicker2")
+        dogname = request.form.get("dogpicker")
+        #**ZOE Please perform db query based on user dog name, start, and end dates
+        #and return all locations to the history.html page****
+        return render_template("history.html", username=username)
+
+    if request.method=="GET":
+        #this is used for when they first navigate to the page and no
+        #history is displayed.
+        username=session["username"]
+        temp=db.execute("SELECT GPS_ID, dog FROM table2 WHERE username=:username",{"username":username})
+        dogs=temp.fetchall()
+        return render_template("history.html", username=username, dogs=dogs)
+
 
 @app.route("/add",methods=["GET","POST"])
 def add():

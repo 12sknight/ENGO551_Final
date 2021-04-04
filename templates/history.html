@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Map </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+
+    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=ZXYoA2xacYmRlCovjBD8y7343AG5Nqo0"></script>
+    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-routing.js?key=ZXYoA2xacYmRlCovjBD8y7343AG5Nqo0"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+    .header {
+      padding: 10px;
+      text-align: left;
+      background: white;
+      color: black;
+      font-size: 25px;
+    }
+    #map {
+      position: absolute;
+      height: 100%;
+      width: 70%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    /* Column container */
+    .row {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+    }
+
+    /*left column*/
+    .left {
+      -ms-flex: 70%;
+      flex: 70%;
+      background-color: #f1f1f1;
+      padding: 20px;
+      text-align: center;
+    }
+    /*right column*/
+    .right {
+      -ms-flex: 30%;
+      flex: 30%;
+      background-color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+
+
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Add in header section with bootstrap navigation buttons -->
+    <div class="header">
+         <a href="{{url_for('logout')}}" class="btn btn-primary" role="button" >Logout</a>
+         <a href="{{url_for('usermap')}}" class="btn btn-primary" role="button">Go to Map</a>
+         <a href="{{url_for('history')}}" class="btn btn-primary" role="button" >Dog History</a>
+         Hello {{username}}!
+     </div>
+
+     <div class="row">
+       <div class="left">
+         <div id="map"></div>
+       </div>
+       <div class="right">
+         <h3> View dog location history: </h3><br>
+
+      <form action="{{ url_for('history') }}" method="post">
+         <label for="dogs">Choose a dog:</label>
+          <select name="dogs" id="dogpicker">
+            {% for d in dogs %}
+            <option value="{{d['dog']}}">{{d['dog']}}</option>
+            {% endfor %}
+          </select><br>
+         <h3> Start Date</h3>
+           <input id="datepicker" name="datepicker" width="340"  /><br>
+           <h3> End Date</h3>
+           <input id="datepicker2" name="datepicker2" width="340" /><br>
+           <input type="submit" class="btn btn-outline-dark btn active" onclick="checkdate();" role="button" id="search" value="Search" />
+         </form>
+             <p3>Please enter an END DATE that is later than the START DATE</p3>
+             <br><br>
+     </div>
+
+
+     <script>
+     $('#datepicker').datepicker({ format: 'yyyy-mm-dd' });
+     $('#datepicker2').datepicker({ format: 'yyyy-mm-dd' });
+     //Hide error msg by default
+     $("p3").hide();
+
+
+     var map;
+
+     map = L.map('map', {
+       layers: MQ.mapLayer(),
+       center: [ 51.044, -114.07 ],
+       zoom: 11
+     });
+
+     var waterIcon = new L.Icon({
+       iconUrl: 'https://github.com/12sknight/ENGO551_Final/blob/main/icons/fountain.png?raw=true',
+       iconSize: [25, 25],
+       iconAnchor: [12, 6],
+     });
+
+
+
+     //Function used to check if the filter dates are correct
+       function checkdate (){
+         let d1 = $( "#datepicker" ).datepicker().val()
+         let d2 = $( "#datepicker2" ).datepicker().val()
+           if (d1 >= d2){
+             $("p3").show();
+             event.preventDefault();
+           }
+         }
+
+
+     </script>
+
+  </body>
+</html>
