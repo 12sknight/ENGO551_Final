@@ -98,11 +98,11 @@ def history():
         # perform query on table 2 to get the gps id for that dog name and username
         id = db.execute("SELECT gps_id FROM table2 WHERE (username = :username AND dog = :dogname)", {"username":username,"dogname":dogname}).fetchone()
         id = id[0]
-        # perform query on table 3 to get the lat and long values for the dog on the selected day
-        h = db.execute("SELECT lat,lng FROM table3 WHERE (dte=:date AND gps_id=:id)", {"date":date,"id":id}).fetchall()
+        # perform query on table 3 to get the lat, long, and time values for the dog on the selected day
+        h = db.execute("SELECT lat,lng,tme FROM table3 WHERE (dte=:date AND gps_id=:id)", {"date":date,"id":id}).fetchall()
         history = list(h)
 
-        return render_template("history.html", username=username, dogs=dogs, history=history)
+        return render_template("history.html", username=username, dogs=dogs, history=history, dogname=dogname, date=date)
 
     if request.method=="GET":
         #this is used for when they first navigate to the page and no
