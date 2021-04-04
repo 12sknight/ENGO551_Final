@@ -88,12 +88,21 @@ def usermap():
 def history():
     if request.method=="POST":
         username=session["username"]
-        startdate = request.form.get("datepicker")
-        enddate = request.form.get("datepicker2")
-        dogname = request.form.get("dogpicker")
-        #**ZOE Please perform db query based on user dog name, start, and end dates
-        #and return all locations to the history.html page****
-        return render_template("history.html", username=username)
+        temp=db.execute("SELECT GPS_ID, dog FROM table2 WHERE username=:username",{"username":username})
+        dogs=temp.fetchall()
+        date = request.form.get("datepicker")
+
+        #dogname = request.form.get("dogpicker")
+        dogname = "Buddy"
+
+        # perform query on table 2 to get the gps id for that dog name and username
+        id = db.execute("SELECT gps_id FROM table2 WHERE (username = :username AND dog = :dogname)", {"username":username,"dogname":dogname}).fetchone()
+        id = id[0]
+        # perform query on table 3 to get the lat and long values for the dog on the selected day
+        h = db.execute("SELECT lat,lng FROM table3 WHERE (dte=:date AND gps_id=:id)", {"date":date,"id":id}).fetchall()
+        history = list(h)
+
+        return render_template("history.html", username=username, dogs=dogs, history=history)
 
     if request.method=="GET":
         #this is used for when they first navigate to the page and no
