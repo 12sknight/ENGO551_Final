@@ -92,8 +92,8 @@ def history():
         dogs=temp.fetchall()
         date = request.form.get("datepicker")
 
-        #dogname = request.form.get("dogpicker")
-        dogname = "Buddy"
+        dogname = request.form.get("dogs")
+        #dogname = "Buddy"
 
         # perform query on table 2 to get the gps id for that dog name and username
         id = db.execute("SELECT gps_id FROM table2 WHERE (username = :username AND dog = :dogname)", {"username":username,"dogname":dogname}).fetchone()

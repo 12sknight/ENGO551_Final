@@ -17,6 +17,9 @@
     <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=ZXYoA2xacYmRlCovjBD8y7343AG5Nqo0"></script>
     <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-routing.js?key=ZXYoA2xacYmRlCovjBD8y7343AG5Nqo0"></script>
 
+    <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+    <script src='https://www.unpkg.com/turf@3.0.14/turf.js'></script>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
@@ -91,14 +94,14 @@
             <option value="{{d['dog']}}">{{d['dog']}}</option>
             {% endfor %}
           </select><br>
-         <h3> Start Date</h3>
+         <h3>Date</h3>
            <input id="datepicker" name="datepicker" width="340"  /><br>
-           <h3> End Date</h3>
-           <input id="datepicker2" name="datepicker2" width="340" /><br>
            <input type="submit" class="btn btn-outline-dark btn active" onclick="checkdate();" role="button" id="search" value="Search" />
          </form>
-             <p3>Please enter an END DATE that is later than the START DATE</p3>
+             <p3>Please enter a Date</p3>
              <br><br>
+
+            <p2> Distance travelled: <b> <span id="results"></span> </b> Km by:<br> <b>{{dogname}}</b> on {{ date }}<br> from <span id="timestart"></span> to <span id="timeend"></span>  </p2>
      </div>
 
 
@@ -107,6 +110,9 @@
      $('#datepicker2').datepicker({ format: 'yyyy-mm-dd' });
      //Hide error msg by default
      $("p3").hide();
+
+     //hide info message by default
+     $("p2").hide();
 
 
      var map;
@@ -124,12 +130,74 @@
      });
 
 
+//create multilinestring feature to show history if available
+    var geojsonFeature = {
+    "type": "Feature",
+    "properties": {
+    },
+    "geometry": {
+        "type": "MultiLineString",
+        "coordinates":
+                [[
+        {% for dict_item in history %}
+          {% if dict_item['lat'] is defined %}
+          [{{dict_item['lng']}}, {{dict_item['lat']}}],
+        {% endif %}
+      {% endfor %}
+              ]]
+    }
+};
+var ftemp = new L.GeoJSON(geojsonFeature).addTo(map);
 
-     //Function used to check if the filter dates are correct
+var path = [];
+var times = [];
+{% for h in history %}
+  {% if h['lat'] is defined %}
+  var lat = {{h['lat']}};
+  var lng = {{h['lng']}};
+  var time = '{{h['tme']}}';
+
+  path.push([{{h['lat']}}, {{h['lng']}}]);
+  times.push(time);
+
+  //zoom to history
+  map.setView([lat, lng],15);
+  {% endif %}
+{% endfor %}
+
+//calculate distance
+var totaldist = 0;
+var units = "kilometers";
+
+var i;
+for (i = 0; i < (path.length-1); i++) {
+  var from = turf.point(path[i]);
+  var to = turf.point(path[i+1]);
+  var distance = turf.distance(from, to, units);
+  totaldist=totaldist+distance;
+}
+
+//send all info to page for viewing
+var dis = totaldist.toString();
+dis=dis.slice(0,4)
+document.getElementById("results").innerHTML = dis;
+
+var t1 = times[0];
+var t2 = times[times.length-1];
+document.getElementById("timestart").innerHTML = t1;
+document.getElementById("timeend").innerHTML = t2;
+
+if (path.length > 0){
+  $("p2").show();
+}
+
+
+
+
+     //Function used to check date is entered
        function checkdate (){
          let d1 = $( "#datepicker" ).datepicker().val()
-         let d2 = $( "#datepicker2" ).datepicker().val()
-           if (d1 >= d2){
+           if (d1 == ""){
              $("p3").show();
              event.preventDefault();
            }
