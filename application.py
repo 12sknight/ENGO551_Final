@@ -77,7 +77,7 @@ def signup():
 
 @app.route("/usermap",methods=["GET","POST"])
 def usermap():
-    #***ZOE add last gps location from dog(s) for user logged in***
+    #***ZOE add last gps location and time from dog(s) for user logged in***
 
     water = db.execute("SELECT * FROM water").fetchall()
     parks = db.execute("SELECT * FROM parks").fetchall()

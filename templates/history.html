@@ -34,8 +34,8 @@
     }
     #map {
       position: absolute;
-      height: 100%;
-      width: 70%;
+      height: 70%;
+      width: 100%;
     }
     html, body {
       height: 100%;
@@ -52,8 +52,8 @@
 
     /*left column*/
     .left {
-      -ms-flex: 70%;
-      flex: 70%;
+      -ms-flex: 100%;
+      flex: 100%;
       background-color: #f1f1f1;
       padding: 20px;
       text-align: center;
@@ -65,6 +65,17 @@
       background-color: white;
       padding: 20px;
       text-align: center;
+    }
+    .center {
+      margin: auto;
+      width: 30%;
+      padding: 0px 0;
+      text-align: center;
+    }
+
+    @media screen and (max-width: 600px) {
+      .center {
+        width: 80%!important;
     }
     </style>
 
@@ -82,9 +93,6 @@
 
      <div class="row">
        <div class="left">
-         <div id="map"></div>
-       </div>
-       <div class="right">
          <h3> View dog location history: </h3><br>
 
       <form action="{{ url_for('history') }}" method="post">
@@ -95,14 +103,21 @@
             {% endfor %}
           </select><br>
          <h3>Date</h3>
+         <div class = "center" >
            <input id="datepicker" name="datepicker" width="340"  /><br>
+         </div>
            <input type="submit" class="btn btn-outline-dark btn active" onclick="checkdate();" role="button" id="search" value="Search" />
          </form>
              <p3>Please enter a Date</p3>
              <br><br>
 
-            <p2> Distance travelled: <b> <span id="results"></span> </b> Km by:<br> <b>{{dogname}}</b> on {{ date }}<br> from <span id="timestart"></span> to <span id="timeend"></span>  </p2>
-     </div>
+            <p2> Distance travelled: <b> <span id="results"></span> </b> Km by:<br> <b>{{dogname}}</b> on {{ date }}<br> from <span id="timestart"></span> to <span id="timeend"></span>  </p2> <br>
+
+
+         <div id="map"></div>
+       </div>
+
+    </div>
 
 
      <script>

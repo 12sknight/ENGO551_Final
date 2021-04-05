@@ -138,6 +138,7 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
        $('#water').removeAttr('disabled');
 
        //get geolocation
+
        if (navigator.geolocation) {
            navigator.geolocation.getCurrentPosition(showParkRoute);
        } else {
@@ -147,6 +148,7 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
        function showParkRoute(position) {
          var targetPoint = turf.point([position.coords.latitude, position.coords.longitude]);
          var nearestpark = turf.nearest(targetPoint, parkpoints);
+         map.setView([position.coords.latitude, position.coords.longitude],13);
 
 
          //show route
@@ -187,6 +189,7 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
        function showWaterRoute(position) {
          var targetPoint = turf.point([position.coords.latitude, position.coords.longitude]);
          var nearestwater = turf.nearest(targetPoint, waterpoints);
+         map.setView([position.coords.latitude, position.coords.longitude],13);
 
          //show route
          var dir = MQ.routing.directions();
