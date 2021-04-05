@@ -77,12 +77,34 @@ def signup():
 
 @app.route("/usermap",methods=["GET","POST"])
 def usermap():
-    #***ZOE add last gps location and time from dog(s) for user logged in***
-
     water = db.execute("SELECT * FROM water").fetchall()
     parks = db.execute("SELECT * FROM parks").fetchall()
     username=session["username"]
-    return render_template("usermap.html", water=water, parks=parks, username=username)
+
+    # get the dog GPS ids and names for the user
+    ids = db.execute("SELECT gps_id,dog from  table2 WHERE username=:username",{"username":username}).fetchall()
+    ids = list(ids)
+    # get the number of dogs that exists for that user
+    num = db.execute("SELECT gps_id,dog from  table2 WHERE username=:username",{"username":username}).rowcount
+    # loop through dogs
+    latest = []
+    i = 0
+    while i < num:
+        id = ids[i][0]
+        dog = ids[i][1]
+        lastday = db.execute("SELECT max(dte) FROM table3 WHERE gps_id=:gps_id",{"gps_id":id}).fetchone()
+        lastday = lastday[0]
+        lasttime = db.execute("SELECT max(tme) FROM table3 WHERE (gps_id=:gps_id AND dte=:dte)",{"gps_id":id, "dte":lastday}).fetchone()
+        lasttime = lasttime[0]
+        lastlat = db.execute("SELECT lat FROM table3 WHERE (gps_id=:gps_id AND dte=:dte AND tme=:tme)",{"gps_id":id, "dte":lastday, "tme":lasttime}).fetchone()
+        lastlat = lastlat[0]
+        lastlong = db.execute("SELECT lng FROM table3 WHERE (gps_id=:gps_id AND dte=:dte AND tme=:tme)",{"gps_id":id, "dte":lastday, "tme":lasttime}).fetchone()
+        lastlong = lastlong[0]
+        # to pass to the usermap
+        latest.append([id,dog,lastlat,lastlong,lastday,lasttime])
+        i+=1
+
+    return render_template("usermap.html", water=water, parks=parks, username=username, latest=latest)
 
 @app.route("/history",methods=["GET","POST"])
 def history():
