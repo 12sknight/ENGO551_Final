@@ -50,19 +50,15 @@
          <button type="button" class="btn btn-primary" onclick="closestpark()" id="park" data-toggle="tooltip" title="Find the closest dog park">Closest Park</button>
          <button type="button" class="btn btn-primary" onclick="closestwater()" id="water" data-toggle="tooltip" title="Find the closest water fountain">Closest Water Fountain</button>
          <a href="{{url_for('history')}}" class="btn btn-primary" role="button" >Dog History</a>
-         Hello {{username}}!
+         <div style="float:right">
+           <img src="https://raw.githubusercontent.com/12sknight/ENGO551_Final/main/icons/dog.png" style="width:50px;height:50px;">
+         </div>
      </div>
 
      <div id="map"></div>
 
 
      <script>
-     //display tooltip
-     //$('[data-toggle="tooltip"]').tooltip();
-
-     //Initialize map, set view to center of calgary if location permissions
-     //var map = L.map('map').setView([51.044, -114.07],11);
-     //map.locate({setView: true, maxZoom: 11});
 
      var map;
 
@@ -74,12 +70,12 @@
 
      var waterIcon = new L.Icon({
        iconUrl: 'https://github.com/12sknight/ENGO551_Final/blob/main/icons/fountain.png?raw=true',
-       iconSize: [25, 25],
+       iconSize: [35, 35],
        iconAnchor: [12, 6],
      });
 
      var dogIcon = new L.Icon({
-       iconUrl: 'https://github.com/12sknight/ENGO551_Final/blob/main/icons/dog.png',
+       iconUrl: 'https://raw.githubusercontent.com/12sknight/ENGO551_Final/main/icons/dog.png',
        iconSize: [25, 25],
        iconAnchor: [12, 6],
      });
@@ -91,9 +87,19 @@
 
      var watersource = L.layerGroup();
      var dogparks = L.layerGroup();
+     var doglast = L.layerGroup();
      var mql;
      var pArray = [];
      var tArray = [];
+
+//add dog(s) last location to map
+{% for l in latest %}
+var markd = L.marker(['{{l[2]}}', '{{l[3]}}'], {icon: dogIcon}).bindPopup('<b> {{l[1]}} </b>' + '<br>' + '{{l[4]}} ' + '{{l[5]}}');
+markd.addTo(doglast);
+{% endfor %}
+doglast.addTo(map);
+
+
 
 //Add parks data to layer
 {% for p in parks %}

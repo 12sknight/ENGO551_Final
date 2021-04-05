@@ -4,18 +4,49 @@
     <title> SignUp </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+    .header {
+      padding: 10px;
+      text-align: left;
+      background: white;
+      color: black;
+      font-size: 25px;
+    }
+
+    .center {
+      margin: auto;
+      width: 60%;
+      padding: 0px 0;
+      text-align: center;
+    }
+
+    @media screen and (max-width: 600px) {
+      .center {
+        width: 80%!important;
+    }
+  }
+    </style>
+
+
   </head>
   <body>
     <div class="header">
-      <h1>Sign Up</h1>
+      <a href="{{url_for('index')}}" class="btn btn-primary" role="button">Go to Map</a>
+      <div style="float:right">
+        <img src="https://raw.githubusercontent.com/12sknight/ENGO551_Final/main/icons/dog.png" style="width:50px;height:50px;">
+      </div>
     </div>
-    <a href="{{url_for('index')}}" class="button1" role="button">Back To Map</a>
+
+    <div class = "center">
+          <h1>Sign Up</h1>
     <form action="/signup" method="post" autocomplete="off">
       <input type="text" name="username" placeholder="Username"/>
       <input type="password" name="password" placeholder="Password"/>
-      <input type="password" name="confpassword" placeholder="Confirm Password"/>
-
-    <button class="btn btn-primary" type="submit">Sign Up</button>
+      <input type="password" name="confpassword" placeholder="Confirm Password"/><br><br>
+      <button class="btn btn-primary" type="submit">Sign Up</button>
     </form>
+  </div>
   </body>
 </html>

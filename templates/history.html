@@ -77,6 +77,7 @@
       .center {
         width: 80%!important;
     }
+  }
     </style>
 
   </head>
@@ -88,7 +89,9 @@
          <a href="{{url_for('logout')}}" class="btn btn-primary" role="button" >Logout</a>
          <a href="{{url_for('usermap')}}" class="btn btn-primary" role="button">Go to Map</a>
          <a href="{{url_for('history')}}" class="btn btn-primary" role="button" >Dog History</a>
-         Hello {{username}}!
+         <div style="float:right">
+           <img src="https://raw.githubusercontent.com/12sknight/ENGO551_Final/main/icons/dog.png" style="width:50px;height:50px;">
+         </div>
      </div>
 
      <div class="row">

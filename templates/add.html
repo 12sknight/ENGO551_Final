@@ -8,6 +8,7 @@
     <style>
     table, th, td {
       border: 1px solid black;
+      text-align: center;
     }
 
     .header {
@@ -17,6 +18,21 @@
       color: black;
       font-size: 25px;
     }
+    .center {
+      margin: auto;
+      width: 40%;
+      padding: 0px 0;
+      text-align: center;
+    }
+    table.center {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media screen and (max-width: 600px) {
+      .center {
+        width: 80%!important;
+    }
+  }
 
 
     </style>
@@ -25,17 +41,20 @@
   <body>
     <div class="header">
       <a href="{{url_for('usermap')}}" class="btn btn-primary" role="button">Go to Map</a>
+      <div style="float:right">
+        <img src="https://raw.githubusercontent.com/12sknight/ENGO551_Final/main/icons/dog.png" style="width:50px;height:50px;">
+      </div>
     </div>
 
+<div class = "center">
       <h1>Add Dogs</h1>
     <form action="/add" method="post" autocomplete="off">
       <input type="text" name="gpsid" placeholder="GPS ID"/>
-      <input type="text" name="dog" placeholder="Dog Name"/>
-
-      <button class="btn btn-primary" type="submit">Add Dog</button>
+      <input type="text" name="dog" placeholder="Dog Name"/><br>
+      <br><button class="btn btn-primary" type="submit">Add Dog</button><br>
     </form>
-Registered Dogs:
-     <table>
+<br>Registered Dogs:
+     <table class="center">
        <tr>
          <th>Dog Name</th>
          <th>GPS ID</th>
@@ -47,6 +66,7 @@ Registered Dogs:
        </tr>
        {% endfor %}
      </table>
+   </div>
 
 
 
