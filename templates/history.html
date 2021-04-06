@@ -112,6 +112,7 @@
            <input type="submit" class="btn btn-outline-dark btn active" onclick="checkdate();" role="button" id="search" value="Search" />
          </form>
              <p3>Please enter a Date</p3>
+             <p4> No results found for {{dogname}} on {{ date }} </p4>
              <br><br>
 
             <p2> Distance travelled: <b> <span id="results"></span> </b> Km by:<br> <b>{{dogname}}</b> on {{ date }}<br> from <span id="timestart"></span> to <span id="timeend"></span>  </p2> <br>
@@ -128,9 +129,11 @@
      $('#datepicker2').datepicker({ format: 'yyyy-mm-dd' });
      //Hide error msg by default
      $("p3").hide();
+     $("p4").hide();
 
      //hide info message by default
      $("p2").hide();
+
 
 
      var map;
@@ -185,7 +188,8 @@ var times = [];
 
 
 //send all info to page for viewing
-dis = '{{distance}}';
+var dis = '{{distance}}';
+console.log(dis);
 document.getElementById("results").innerHTML = dis;
 
 var t1 = times[0];
@@ -196,6 +200,11 @@ document.getElementById("timeend").innerHTML = t2;
 if (path.length > 0){
   $("p2").show();
 }
+
+if (dis === '0'){
+  $("p4").show();
+}
+
 
      //Function used to check date is entered
        function checkdate (){
