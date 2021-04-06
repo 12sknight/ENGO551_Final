@@ -249,7 +249,7 @@ def api(gps_id,date):
     locations.sort(key=lambda x: x[2])
 
     # loop to calculate each distance and add all together
-    if num > 0:
+    if num > 1:
         i = 0;
         distance = 0
         while i < (num-1):
