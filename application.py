@@ -153,10 +153,10 @@ def history():
         num = db.execute("SELECT lat,lng,tme FROM table3 WHERE (dte=:date AND gps_id=:id)", {"date":date,"id":id}).rowcount
         history = list(h)
 
+        distance = 0
+        i = 0
         # loop to calculate each distance and add all together
-        if num > 0:
-            i = 0;
-            distance = 0
+        if num > 1:
             while i < (num-1):
                 dist = sphere_distance(history[i][0],history[i][1],history[i+1][0],history[i+1][1])
                 distance = distance + dist
