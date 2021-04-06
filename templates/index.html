@@ -94,17 +94,26 @@
 {% for p in parks %}
 var geojsonFeature = [{
 "type": "Feature",
-"properties": {},
+"properties": {
+  "Location": '{{ p['parcel_location'] }}'
+},
 "geometry": {
    "type": "Polygon",
    "coordinates": {{ p['geom'] }}
    }
 }];
 
-var ftemp = new L.GeoJSON(geojsonFeature).addTo(map);
+var ftemp = new L.GeoJSON(geojsonFeature, {
+  onEachFeature: onEachFeature
+}).addTo(map);
 ftemp.addTo(dogparks);
 
 {% endfor %}
+
+//Function to bind popup to each geojson feature
+function onEachFeature(feature, layer) {
+        layer.bindPopup('<b>Location: </b>'  + feature.properties.Location);
+}
 
 //create turf array
 var parkpoints = turf.featureCollection([

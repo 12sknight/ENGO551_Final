@@ -183,21 +183,9 @@ var times = [];
   {% endif %}
 {% endfor %}
 
-//calculate distance
-var totaldist = 0;
-var units = "kilometers";
-
-var i;
-for (i = 0; i < (path.length-1); i++) {
-  var from = turf.point(path[i]);
-  var to = turf.point(path[i+1]);
-  var distance = turf.distance(from, to, units);
-  totaldist=totaldist+distance;
-}
 
 //send all info to page for viewing
-var dis = totaldist.toString();
-dis=dis.slice(0,4)
+dis = '{{distance}}';
 document.getElementById("results").innerHTML = dis;
 
 var t1 = times[0];
@@ -208,9 +196,6 @@ document.getElementById("timeend").innerHTML = t2;
 if (path.length > 0){
   $("p2").show();
 }
-
-
-
 
      //Function used to check date is entered
        function checkdate (){

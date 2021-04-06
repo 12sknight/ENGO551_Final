@@ -110,6 +110,26 @@ def usermap():
 
 @app.route("/history",methods=["GET","POST"])
 def history():
+    def sphere_distance(lat1, long1, lat2, long2):
+
+        # Converts lat & long to spherical coordinates in radians.
+        d2r = math.pi/180.0
+
+        # phi = 90 - latitude
+        phi1 = (90.0 - lat1)*d2r
+        phi2 = (90.0 - lat2)*d2r
+
+        # theta = longitude
+        theta1 = long1*d2r
+        theta2 = long2*d2r
+
+        # Compute the spherical distance from spherical coordinates.
+        # Haversine formula
+        cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + math.cos(phi1)*math.cos(phi2))
+        arc = math.acos(cos)*6371 #radius of the earth in km
+
+        return arc
+
     if request.method=="POST":
         username=session["username"]
         temp=db.execute("SELECT GPS_ID, dog FROM table2 WHERE username=:username",{"username":username})
@@ -124,9 +144,20 @@ def history():
         id = id[0]
         # perform query on table 3 to get the lat, long, and time values for the dog on the selected day
         h = db.execute("SELECT lat,lng,tme FROM table3 WHERE (dte=:date AND gps_id=:id)", {"date":date,"id":id}).fetchall()
+        num = db.execute("SELECT lat,lng,tme FROM table3 WHERE (dte=:date AND gps_id=:id)", {"date":date,"id":id}).rowcount
         history = list(h)
 
-        return render_template("history.html", username=username, dogs=dogs, history=history, dogname=dogname, date=date)
+        # loop to calculate each distance and add all together
+        if num > 0:
+            i = 0;
+            distance = 0
+            while i < (num-1):
+                dist = sphere_distance(history[i][0],history[i][1],history[i+1][0],history[i+1][1])
+                distance = distance + dist
+                i+=1
+            distance = round(distance,2)
+
+        return render_template("history.html", username=username, dogs=dogs, history=history, dogname=dogname, date=date, distance=distance)
 
     if request.method=="GET":
         #this is used for when they first navigate to the page and no
