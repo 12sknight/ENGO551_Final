@@ -4,6 +4,8 @@ from flask import Flask, session, render_template, request, redirect, jsonify, f
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from datetime import datetime
+import math
 
 import requests
 
@@ -165,6 +167,63 @@ def add():
 
             #display dog info as a table
         return render_template("add.html", dogs=dogs)
+
+# API
+@app.route("/api/<gps_id>/<date>", methods=['GET'])
+def api(gps_id,date):
+    # function to calculate the distance between two lat and long values
+    def sphere_distance(lat1, long1, lat2, long2):
+
+        # Converts lat & long to spherical coordinates in radians.
+        d2r = math.pi/180.0
+
+        # phi = 90 - latitude
+        phi1 = (90.0 - lat1)*d2r
+        phi2 = (90.0 - lat2)*d2r
+
+        # theta = longitude
+        theta1 = long1*d2r
+        theta2 = long2*d2r
+
+        # Compute the spherical distance from spherical coordinates.
+        # Haversine formula
+        cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + math.cos(phi1)*math.cos(phi2))
+        arc = math.acos(cos)*6371 #radius of the earth in km
+
+        return arc
+
+    # return an error if the gps_id does not exist in our database
+    exist = db.execute("SELECT * FROM table3 WHERE gps_id=:gps_id",{"gps_id":gps_id})
+    if exist.rowcount==0:
+        return render_template("error.html", message="GPS ID not found.")
+
+    # use gps_id to get the name of the dog and all the location data from the date
+    dog = db.execute("SELECT dog from table2 WHERE gps_id=:gps_id",{"gps_id":gps_id}).fetchone()
+    dog = dog[0]
+    locations = db.execute("SELECT lat,lng,tme from table3 WHERE (gps_id=:gps_id AND dte=:dte)",{"gps_id":gps_id,"dte":date}).fetchall()
+    locations = list(locations)
+    num = db.execute("SELECT * from table3 WHERE (gps_id=:gps_id AND dte=:dte)",{"gps_id":gps_id,"dte":date}).rowcount
+    # ensure entries are sorted by time
+    locations.sort(key=lambda x: x[2])
+
+    # loop to calculate each distance and add all together
+    if num > 0:
+        i = 0;
+        distance = 0
+        while i < (num-1):
+            dist = sphere_distance(locations[i][0],locations[i][1],locations[i+1][0],locations[i+1][1])
+            distance = distance + dist
+            i+=1
+        distance = round(distance,2)
+    else:
+        distance = []
+    # object to return
+    data = {
+        "name": dog,
+        "date": date,
+        "distance": distance
+    }
+    return(jsonify(data))
 
 @app.route('/logout')
 def logout():
