@@ -5,6 +5,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from datetime import datetime
+from math import sin, cos, sqrt, atan2, pi
 import math
 
 import requests
@@ -111,22 +112,27 @@ def usermap():
 @app.route("/history",methods=["GET","POST"])
 def history():
     def sphere_distance(lat1, long1, lat2, long2):
-
+        # radius of earth
+        R = 6371
         # Converts lat & long to spherical coordinates in radians.
-        d2r = math.pi/180.0
+        d2r = pi/180.0
 
-        # phi = 90 - latitude
-        phi1 = (90.0 - lat1)*d2r
-        phi2 = (90.0 - lat2)*d2r
+        #latitude
+        lat1=lat1*d2r
+        lat2=lat2*d2r
 
-        # theta = longitude
-        theta1 = long1*d2r
-        theta2 = long2*d2r
+        #longitude
+        long1 = long1*d2r
+        long2 = long2*d2r
+
+        dlat = lat2-lat1
+        dlon = long2-long1
 
         # Compute the spherical distance from spherical coordinates.
         # Haversine formula
-        cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + math.cos(phi1)*math.cos(phi2))
-        arc = math.acos(cos)*6371 #radius of the earth in km
+        a = (sin(dlat/2))**2 + cos(lat1) * cos(lat2) * (sin(dlon/2))**2
+        c = 2 * atan2(sqrt(a), sqrt(1-a))
+        arc = R * c
 
         return arc
 
@@ -204,24 +210,29 @@ def add():
 def api(gps_id,date):
     # function to calculate the distance between two lat and long values
     def sphere_distance(lat1, long1, lat2, long2):
-
+        # radius of earth
+        R = 6371
         # Converts lat & long to spherical coordinates in radians.
-        d2r = math.pi/180.0
+        d2r = pi/180.0
 
-        # phi = 90 - latitude
-        phi1 = (90.0 - lat1)*d2r
-        phi2 = (90.0 - lat2)*d2r
+        #latitude
+        lat1=lat1*d2r
+        lat2=lat2*d2r
 
-        # theta = longitude
-        theta1 = long1*d2r
-        theta2 = long2*d2r
+        #longitude
+        long1 = long1*d2r
+        long2 = long2*d2r
+
+        dlat = lat2-lat1
+        dlon = long2-long1
 
         # Compute the spherical distance from spherical coordinates.
         # Haversine formula
-        cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) + math.cos(phi1)*math.cos(phi2))
-        arc = math.acos(cos)*6371 #radius of the earth in km
+        a = (sin(dlat/2))**2 + cos(lat1) * cos(lat2) * (sin(dlon/2))**2
+        c = 2 * atan2(sqrt(a), sqrt(1-a))
+        distance = R * c
 
-        return arc
+        return distance
 
     # return an error if the gps_id does not exist in our database
     exist = db.execute("SELECT * FROM table3 WHERE gps_id=:gps_id",{"gps_id":gps_id})
