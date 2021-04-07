@@ -69,3 +69,9 @@ Logged in users can also query their dog’s past location history by pressing t
 An API call can be performed by adding \api\<gps_id>\<date> to the url to return a user's dog’s total distance travelled in kilometers on a given day. For example, calling <route>/api/68247412/2021-04-02 will return:
 
 ![api](/screenshots/api.png) 
+
+
+
+<h3> Mobile Usage </h3>
+
+To use this application on your mobile device, install requirements.txt, which includes pyopenssl. This allows us to run the services with https:// instead of http, so our mobile device will allow the location requests. Then, instead of the `flask run` command, use `flask run --cert=adhoc --host=0.0.0.0`. To access the web application on your mobile device, you will need to connect it to your WiFi, find your WiFi IP address, and enter https://<your Ip address>:5000 in your browser. 
