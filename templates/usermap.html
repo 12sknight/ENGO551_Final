@@ -35,9 +35,6 @@
       width: 100%;
     }
 
-
-
-
     </style>
 
   </head>
@@ -80,11 +77,6 @@
        iconAnchor: [12, 6],
      });
 
-
-     //Add tilelayer to map
-     //L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png?api_key=30b6c838-4624-47eb-964a-87fcc2e3eb39', {maxZoom: 20, attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}).addTo(map);
-
-
      var watersource = L.layerGroup();
      var dogparks = L.layerGroup();
      var doglast = L.layerGroup();
@@ -98,8 +90,6 @@ var markd = L.marker(['{{l[2]}}', '{{l[3]}}'], {icon: dogIcon}).bindPopup('<b> {
 markd.addTo(doglast);
 {% endfor %}
 doglast.addTo(map);
-
-
 
 //Add parks data to layer
 {% for p in parks %}
@@ -188,7 +178,6 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
      }
 
 
-
      // finds and displays route to closest water source
      function closestwater() {
        //disable button
@@ -227,10 +216,6 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
      }
 
 
-
-
-
-
      //Add overlay control
      var overlayMaps = {
      "Dog Parks": dogparks,
@@ -239,10 +224,6 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
 
      //add layer control
      var layerscontrol = L.control.layers(overlayMaps).addTo(map);
-
-
-
-
 
      </script>
 

@@ -34,10 +34,6 @@
       height: 100%;
       width: 100%;
     }
-
-
-
-
     </style>
 
   </head>
@@ -59,12 +55,6 @@
 
 
      <script>
-     //display tooltip
-     //$('[data-toggle="tooltip"]').tooltip();
-
-     //Initialize map, set view to center of calgary if location permissions
-     //var map = L.map('map').setView([51.044, -114.07],11);
-     //map.locate({setView: true, maxZoom: 11});
 
      var map;
 
@@ -79,10 +69,6 @@
        iconSize: [25, 25],
        iconAnchor: [12, 6],
      });
-
-     //Add tilelayer to map
-     //L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png?api_key=30b6c838-4624-47eb-964a-87fcc2e3eb39', {maxZoom: 20, attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}).addTo(map);
-
 
      var watersource = L.layerGroup();
      var dogparks = L.layerGroup();
@@ -227,9 +213,6 @@ turf.point([{{ p['lat'] }}, {{ p['lng'] }}]),
 
      //add layer control
      var layerscontrol = L.control.layers(overlayMaps).addTo(map);
-
-
-
 
 
      </script>
