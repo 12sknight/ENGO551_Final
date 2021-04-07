@@ -74,4 +74,4 @@ An API call can be performed by adding \api\<gps_id>\<date> to the url to return
 
 <h3> Mobile Usage </h3>
 
-To use this application on your mobile device, install requirements.txt, which includes pyopenssl. This allows us to run the services with https:// instead of http, so our mobile device will allow the location requests. Then, instead of the `flask run` command, use `flask run --cert=adhoc --host=0.0.0.0`. To access the web application on your mobile device, you will need to connect it to your WiFi, find your WiFi IP address, and enter https://<your Ip address>:5000 in your browser. 
+To use this application on your mobile device, install requirements.txt, which includes pyopenssl. This allows us to run the services with https:// instead of http, so our mobile device will allow the location requests. Then, instead of the `flask run` command, use `flask run --cert=adhoc --host=0.0.0.0`. To access the web application on your mobile device, you will need to connect it to your WiFi, find your WiFi IP address, and enter https://< your IP address >:5000 in your browser. 
