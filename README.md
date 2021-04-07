@@ -67,4 +67,5 @@ Logged in users can also query their dog’s past location history by pressing t
 ### API
 
 An API call can be performed by adding \api\<gps_id>\<date> to the url to return a user's dog’s total distance travelled in kilometers on a given day. For example, calling <route>/api/68247412/2021-04-02 will return:
+
 ![api](/screenshots/api.png) 
